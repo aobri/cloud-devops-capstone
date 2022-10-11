@@ -112,6 +112,5 @@ workflows:
       - aws-eks/update-container-image:
           cluster-name: EksCluster-yyofAdFnSvC1
           container-image-updates: 'aobri/cloud-devops-capstone:latest'
-          record: true
           requires: [update-eks-deployment]
           resource-name: deployment/capstone-app
