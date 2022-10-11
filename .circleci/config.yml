@@ -27,13 +27,13 @@ jobs:
           command: |
             # Install hadolint
             sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64 && sudo chmod +x /bin/hadolint
-            sudo npm install -g html-lint
+            # sudo npm install -g html-lint
             sudo apt install tidy
       - run:
           name: lint sourcecode (html)
           command: |
-            html-lint src/index_2.html
-            cat  src/index_2.html
+            # html-lint src/index_2.html
+            # cat  src/index_2.html
             tidy src/index_3.html
             cat  src/index_3.html
       - run:
