@@ -1,0 +1,64 @@
+Description: >
+  Ahmed Yassin / Udacity Cloud DevOps ND 2022 - Capstone Project
+
+###################################################################################################
+Parameters:
+  EnvironmentName:
+    Description: Environment name to be prefixed to resource exports.
+    Type: String
+
+###################################################################################################
+Resources:
+  ClusterInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Ref ClusterRole
+
+  ClusterRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - eks.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+        - arn:aws:iam::aws:policy/AmazonEKSServicePolicy
+        - arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess
+        - arn:aws:iam::aws:policy/AmazonEKSVPCResourceController
+
+  EksCluster:
+    Type: AWS::EKS::Cluster
+    Properties:
+      Version: "1.23"
+      RoleArn: !GetAtt ClusterRole.Arn
+      ResourcesVpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue: !Sub "${EnvironmentName}-SCG"
+        SubnetIds:
+          Fn::Split:
+            - ","
+            - Fn::ImportValue:
+                Fn::Sub: ${EnvironmentName}-PUB-NETS
+
+###################################################################################################
+Outputs:
+  EksClusterId:
+    Description: The EKS cluster ID
+    Value: !Ref EksCluster
+    Export:
+      Name: !Sub ${EnvironmentName}-EKS-Cluster
+
+  EKSRoleArn:
+    Description: The role that Amazon EKS will use to create AWS resources for Kubernetes clusters
+    Value: !GetAtt ClusterRole.Arn
+    Export:
+      Name: !Sub "${EnvironmentName}-EKSRoleArn"
