@@ -1,0 +1,92 @@
+version: 2.1
+
+###################################################################################################
+orbs:
+  awscli: aws/cli@3.1.3
+  awseks: aws/eks@3.1.3
+  kube: kubernetes/kube@1.2.1
+
+
+###################################################################################################
+jobs: 
+
+  build: 
+    docker: 
+      - image: alpine
+    steps: 
+      # since we are using a simple html to represent the app no additional build steps needed
+      - checkout
+
+  lint:
+    docker:
+      - image: cimg/node:18.10.0
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies (hadolint, html-lint/tidy)
+          command: |
+            # Install hadolint
+            wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64 && chmod +x /bin/hadolint
+            npm install -g html-lint
+            sudo apt install tidy
+      - run:
+          name: lint sourcecode (html)
+          command: |
+            html-lint src/index_2.html
+            cat  src/index_2.html
+            tidy src/index_3.html
+            cat  src/index_3.html
+      - run:
+          name: lint Dockerfile
+          command: hadolint Dockerfile
+            
+      
+  build-and-publish-image:
+    docker:
+      - image: docker:stable
+        auth:
+          username: $DOCKERHUB_LOGIN
+          password: $DOCKERHUB_ACCESS_TOKEN
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: build and publish 
+          command: |
+            docker tag aobri/cloud-devops-capstone:latest aobri/cloud-devops-capstone:previous
+            docker build -t aobri/cloud-devops-capstone:latest  . 
+            docker push aobri/cloud-devops-capstone
+
+
+
+###################################################################################################
+  # deploy-infra:
+
+  # configure-infra:
+
+  # switch-traffic-to-blue:
+
+  # deploy-green:
+
+  # test-green:
+
+  # switch-traffic-to-green:
+
+  # deploy-blue:
+
+  # cleanup:
+
+
+
+
+
+
+###################################################################################################
+workflows: 
+  default:
+    jobs:
+      - build
+      - lint:
+          requires: [build]
+      - build-and-publish-image:
+          requires: [lint]
