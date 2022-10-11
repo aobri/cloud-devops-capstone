@@ -57,7 +57,8 @@ jobs:
 # CD ##################################################################################################
   
   update-eks-deployment:
-    executor: aws-eks/python3
+    docker:
+      - image: cimg/python:3.10 
     parameters:
       cluster-name:
         description: |
@@ -75,7 +76,8 @@ jobs:
           
 
   update-eks-service:
-    executor: aws-eks/python3
+    docker:
+      - image: cimg/python:3.10 
     parameters:
       cluster-name:
         description: |
