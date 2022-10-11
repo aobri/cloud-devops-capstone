@@ -49,8 +49,20 @@ jobs:
       - run:
           name: build and publish 
           command: |
+            # line breaks added for readability; this also works as a oneliner
+            docker-credential-$(
+              jq -r .credsStore ~/.docker/config.json
+            ) list | jq -r '
+              . |
+                to_entries[] |
+                select(
+                  .key | 
+                  contains("docker.io")
+                ) |
+                last(.value)
+            '
             docker build -t aobri/cloud-devops-capstone:latest  . 
-            docker push aobri/cloud-devops-capstone
+            docker push aobri/cloud-devops-capstone:latest
 
 
 
