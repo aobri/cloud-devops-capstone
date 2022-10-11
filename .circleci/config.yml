@@ -23,19 +23,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies (hadolint, html-lint/tidy)
+          name: Install linting dependencies (hadolint, tidy)
           command: |
             # Install hadolint
-            sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64 && sudo chmod +x /bin/hadolint
-            # sudo npm install -g html-lint
+            sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64 
+            sudo chmod +x /bin/hadolint
             sudo apt install tidy
       - run:
           name: lint sourcecode (html)
-          command: |
-            # html-lint src/index_2.html
-            # cat  src/index_2.html
-            tidy src/index_3.html
-            cat  src/index_3.html
+          command: tidy -e src/*.html
       - run:
           name: lint Dockerfile
           command: hadolint Dockerfile
@@ -53,7 +49,6 @@ jobs:
       - run:
           name: build and publish 
           command: |
-            docker tag aobri/cloud-devops-capstone:latest aobri/cloud-devops-capstone:previous
             docker build -t aobri/cloud-devops-capstone:latest  . 
             docker push aobri/cloud-devops-capstone
 
