@@ -91,8 +91,6 @@ jobs:
       - kubernetes/create-or-update-resource:
           resource-file-path: kubernetes/service.yml
           resource-name: service/capstone-app
-          get-rollout-status: true
-          show-kubectl-command: true
 
 
 
