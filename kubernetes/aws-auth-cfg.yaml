@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapUsers: |
+    - userarn: arn:aws:sts::443885909569:assumed-role/voclabs/user1709311=11010788698
+      username: voclabs/user1709311=11010788698
+      groups:
+      - system:masters
+      - system:nodes
+    - userarn: arn:aws:iam::443885909569:user/capstone-user
+      username: capstone-user
+      groups:
+      - system:masters
+      - system:nodes
