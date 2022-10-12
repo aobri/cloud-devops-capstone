@@ -106,13 +106,13 @@ workflows:
       - build-and-publish-image:
           requires: [lint]
       - update-eks-service:
-          cluster-name: EksCluster-yyofAdFnSvC1
+          cluster-name: myCluster
           requires: [build-and-publish-image]
       - update-eks-deployment:
-          cluster-name: EksCluster-yyofAdFnSvC1
+          cluster-name: myCluster
           requires: [update-eks-service]
       - aws-eks/update-container-image:
-          cluster-name: EksCluster-yyofAdFnSvC1
+          cluster-name: myCluster
           container-image-updates: 'aobri/cloud-devops-capstone:latest'
           requires: [update-eks-deployment]
           resource-name: deployment/capstone-app
