@@ -113,4 +113,4 @@ workflows:
           cluster-name: myCluster
           container-image-updates: 'aobri/cloud-devops-capstone:latest'
           requires: [update-eks-deployment]
-          resource-name: capstone-app
+          resource-name: deployment/capstone-app
