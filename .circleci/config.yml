@@ -109,8 +109,3 @@ workflows:
       - update-eks-deployment:
           cluster-name: myCluster
           requires: [update-eks-service]
-      - aws-eks/update-container-image:
-          cluster-name: myCluster
-          container-image-updates: 'aobri/cloud-devops-capstone:latest'
-          requires: [update-eks-deployment]
-          resource-name: deployment/capstone-app
